@@ -10,15 +10,15 @@ node{
  }
  
  stage('Build Docker Imager'){
-   sh 'docker build -t kammana/myweb:0.0.1 .'
+   sh 'docker build -t osmangoni2/myweb:0.0.1 .'
  }
  
  stage('Push to Docker Hub'){
  
 	 withCredentials([string(credentialsId: 'github-pwd', variable: 'dockerHubPwd')]) {
-        sh "docker login -u kammana -p ${dockerHubPwd}"
+        sh "docker login -u osmangoni2 -p ${dockerHubPwd}"
      }
-	 sh 'docker push kammana/myweb:0.0.1'
+	 sh 'docker push osmangoni2/myweb:0.0.1'
  }
  stage('Remove Previous Container'){
 	try{
@@ -31,7 +31,7 @@ node{
 	}
  }
  stage('Deploy to Dev Environment'){
-   def dockerRun = 'docker run -d -p 8080:8080 --name myweb kammana/myweb:0.0.1 '
+   def dockerRun = 'docker run -d -p 8080:8080 --name myweb osmangoni2/myweb:0.0.1 '
    sshagent(['docker-dev']) {
     sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.17.196 ${dockerRun}"
    }
